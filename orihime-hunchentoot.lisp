@@ -2,18 +2,12 @@
 
 (in-package #:orihime-hunchentoot)
 
-
 (hunchentoot:start (make-instance 'hunchentoot:easy-acceptor :port 80))
-(hunchentoot:define-easy-handler (simple-lisp-rpc :uri "/simple-lisp-rpc") ()
-  (setf (hunchentoot:content-type*) "application/json")
-  (let ((json (cl-json:decode-json-from-source
-               (sb-ext:octets-to-string
-                (hunchentoot:raw-post-data :force-binary t)))))
-    (destructuring-bind (function-name &rest rest) 
-        json
-      (format nil "~S~%"
-              (let ((orihime::*current-backend* :larousse))
-                (apply (intern (string-upcase function-name) (find-package :orihime)) rest))))))
+
+(hunchentoot:define-easy-handler (add-child-word-to-text :uri "/add-child-word-to-text")
+    (text-hash reading ocurrence (backend :init-form nil :parameter-type 'keyword))
+  (let ((orihime::*current-backend* (or backend orihime::*current-backend*)))
+    (orihime::add-child-word-to-text text-hash reading ocurrence)))
 
 (defun orihime::text-from-hash (text-hash)
   (second (dbi:fetch (orihime::grab-text (orihime::sql-text-id-from-hash text-hash)))))
