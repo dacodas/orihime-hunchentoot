@@ -41,3 +41,14 @@
   (let ((orihime::*current-backend* (or backend orihime::*current-backend*)))
     (format nil "~A"
             (orihime::add-child-word-to-text text-hash reading ocurrence))))
+
+
+(hunchentoot:define-easy-handler (add-child-word-to-text :uri "/login")
+    (userid password)
+  (authenticate-user userid password))
+
+(hunchentoot:define-easy-handler (search :uri "/search")
+    (reading (backend :parameter-type 'keyword))
+    (let ((orihime::*current-backend* backend))
+      (format nil "~A"
+              (orihime::find-definition-from-backend reading))))
