@@ -6,7 +6,7 @@
 (defparameter *templates-directory* (merge-pathnames "templates/" *source-directory*))
 (defparameter *static-directory* (merge-pathnames "static/" *source-directory*))
 
-(hunchentoot:start (make-instance 'hunchentoot:easy-acceptor :port 80))
+(hunchentoot:start (make-instance 'hunchentoot:easy-acceptor :port 8081))
 
 (push
  (hunchentoot:create-folder-dispatcher-and-handler "/static/" *static-directory*)
@@ -47,7 +47,7 @@
     (userid password)
   (authenticate-user userid password))
 
-(hunchentoot:define-easy-handler (search :uri "/search")
+(hunchentoot:define-easy-handler (orihime-search :uri "/search")
     (reading (backend :parameter-type 'keyword))
     (let ((orihime::*current-backend* backend))
       (format nil "~A"

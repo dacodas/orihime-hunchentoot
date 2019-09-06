@@ -1,1 +1,0 @@
-loading.svg from loading.io
